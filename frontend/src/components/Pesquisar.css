@@ -1,0 +1,33 @@
+.pesquisar {
+    display: flex;
+    background-color: #FFFFFF;
+    width: 30vw;
+    height: 8vh;
+    left: 10vw;
+    border-radius: 12px;
+    position: relative; 
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  
+  .inputpesquisar {
+    width: 20vw;
+    height: 18px;
+    border: none;
+    font-size: 18px;
+    font-family: 'Proxima Nova', sans-serif;
+    margin-top: 20px;
+    margin-left: 70px;
+    outline: none; 
+  }
+
+  .icone {
+    background-image: url("../imagens/pesquisar.png"); 
+    background-size: cover; 
+    position: absolute;
+    left: 1vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+  }

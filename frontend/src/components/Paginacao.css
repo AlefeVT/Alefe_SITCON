@@ -1,0 +1,30 @@
+.Paginacao {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 25vw; 
+  height: 8vh; 
+  background-color: #FFFFFF;
+  margin: 0 auto; 
+  border-radius: 8px;
+  margin-top: 30px;
+  margin-bottom: 70px;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.22);
+}
+
+.pags {
+  text-align: center;
+  padding: 6px 10px;
+  margin: 10px;
+  border: none;
+  color: #C4C4C4;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Proxima Nova', sans-serif;
+  font-size: 18px;
+}
+
+.pags:active {
+  background-color: #00629B;
+  color: #FFFFFF;
+}

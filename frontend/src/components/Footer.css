@@ -1,0 +1,18 @@
+.footer-container {
+  width: 100vw;
+  height: 20vh;
+  background-color: #EDF8FC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 0; 
+}
+
+.footer-text {
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 26px;
+  color: #00629B;
+}
