@@ -5,7 +5,7 @@ const Global = createGlobalStyle`
 * {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: 'Proxima Nova', sans-serif;
 }
 
 body {

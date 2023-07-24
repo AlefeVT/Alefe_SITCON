@@ -9,8 +9,8 @@
 }
 
 .header-button {
-  width: 16vw; 
-  height: 6vh;
+  width: 18vw; 
+  height: 7vh;
   font-size: 18px;
   font-family: 'Proxima Nova', sans-serif;
   color: #FFFFFF;
@@ -28,4 +28,8 @@
 
 #btn2 {
   right: 30vw;
+}
+
+button:hover {
+  background-color: #0056b3;
 }

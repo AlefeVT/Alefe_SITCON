@@ -1,0 +1,127 @@
+/* Estilos do botão "Voltar" */
+.buttonVoltar {
+    text-align: center;
+    font-weight: 700;
+    width: 5vw;
+    height: 5.5vh;
+    background-color: transparent;
+    color: #00629B;
+    border: 1px solid #00629B;
+    border-radius: 12px;
+    margin-top: 3vh;
+    margin-left: 7vw;
+    margin-bottom: 3vh;
+    cursor: pointer;
+}
+
+.buttonVoltar:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* Estilos do contêiner do formulário */
+.formulario-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90vw;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+/* Estilos dos campos de entrada de texto */
+.campos {
+    background-color: #ffffff;
+    box-shadow: 1px 1px 3px black;
+    border: none;
+    border-radius: 5px;
+    height: 6vh;
+}
+
+/* Estilos para posicionar campos de formulário lado a lado */
+.formulario-campos-lado-a-lado {
+    display: flex;
+    gap: 20px;
+}
+
+/* Estilos para campos tipográficos e profissionais do formulário */
+.formulario-campos-tip-pro {
+    display: flex;
+    margin-bottom: 2vh;
+}
+
+/* Estilos para campos de hora e data do formulário */
+.formulario-campos-hora-data {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+/* Estilos para a seção 1 do formulário */
+.formulario-section1 {
+    margin-left: 8%;
+    margin-bottom: 15vh;
+    height: 10vh;
+}
+
+/* Estilos para os campos do formulário */
+.formulario-campo1 input {
+    width: 26.8vw;
+    display: flex;
+}
+
+/* Estilos para a seção "Profissional" do formulário */
+.formulario-profissional {
+    font-weight: 700;
+    margin-left: 8%;
+    margin-bottom: 5vh;
+}
+
+/* Estilos para o elemento com o id "profissional" */
+#profissional {
+    width: 83vw;
+}
+
+/* Estilos para os campos de entrada de texto da seção 2 do formulário */
+.formulario-campo2 input {
+    width: 40.7vw;
+    height: 6vh;
+}
+
+/* Estilos para os campos de seleção da seção 2 do formulário */
+.formulario-campo2 select {
+    width: 40.7vw;
+    height: 6vh;
+}
+
+/* Estilos para o contêiner do formulário de baixo */
+.formulario-campo2 {
+    height: 10vh;
+}
+
+/* Estilos para a seção 2 do formulário */
+.formulario-section2 {
+    margin-left: 8%;
+}
+
+/* Estilos do botão "Enviar" */
+.buttonEnviar {
+    text-align: center;
+    font-weight: 700;
+    width: 7vw;
+    height: 5.5vh;
+    background-color: #00629B;
+    color: #ffffff;
+    border: 1px solid #00629B;
+    border-radius: 12px;
+    margin-left: 83vw;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    cursor: pointer;
+}
+
+.buttonEnviar:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
