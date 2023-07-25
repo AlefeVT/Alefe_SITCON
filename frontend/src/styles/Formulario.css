@@ -1,5 +1,3 @@
-
-/* Estilos do contêiner do formulário */
 .formulario-container {
     display: flex;
     flex-direction: column;
@@ -10,10 +8,9 @@
     font-family: 'Proxima Nova', sans-serif;
 }
 
-/* Estilos dos campos de entrada de texto */
 .campos {
     background-color: #ffffff;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 2px 5px #0000002f;
     border: none;
     border-radius: 5px;
     height: 6vh;
@@ -25,57 +22,48 @@
     color: red;
 }
 
-/* Estilos para posicionar campos de formulário lado a lado */
 .formulario-campos-lado-a-lado {
     display: flex;
     gap: 20px;
 }
 
-/* Estilos para campos tipográficos e profissionais do formulário */
 .formulario-campos-tip-pro {
     display: flex;
     margin-bottom: 2vh;
 }
 
-/* Estilos para campos de hora e data do formulário */
 .formulario-campos-hora-data {
     display: flex;
     justify-content: space-between;
     gap: 30px;
 }
 
-/* Estilos para a seção 1 do formulário */
 .formulario-section1 {
     margin-left: 8%;
-    margin-bottom: 15vh;
+    margin-bottom: 5vh;
     height: 10vh;
 }
 
-/* Estilos para os campos do formulário */
 .formulario-campo1 input {
     width: 25vw;
     display: flex;
 }
 
-/* Estilos para a seção "Profissional" do formulário */
 .formulario-profissional {
     font-weight: 700;
     margin-left: 8%;
-    margin-bottom: 5vh;
+    margin-bottom: 3vh;
 }
 
-/* Estilos para o elemento com o id "profissional" */
 #profissional {
     width: 84vw;
 }
 
-/* Estilos para os campos de entrada de texto da seção 2 do formulário */
 .formulario-campo2 input {
     width: 39.1vw;
     height: 6vh;
 }
 
-/* Estilos para os campos de seleção da seção 2 do formulário */
 .formulario-campo2 select {
     width: 41.2vw;
     height: 6vh;
@@ -103,11 +91,38 @@
     border-radius: 12px;
     margin-left: 83vw;
     margin-top: 3vh;
-    margin-bottom: 3vh;
+    margin-bottom: 8vh;
     cursor: pointer;
+    box-shadow: 2px 2px 5px #00000031;
 }
 
 .buttonEnviar:hover {
     background-color: #0056b3;
     color: #fff;
+}
+
+.successMessage {
+    background-color: #4caf50;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+    width: 82vw;
+    margin-left: 8%;
+    border-radius: 12px;
+    font-weight: 100;
+}
+
+.atencaoMessage {
+    background-color: #FFD6B0;
+    color: #333333;
+    text-align: center;
+    padding: 20px;
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+    width: 82vw;
+    margin-left: 8%;
+    border-radius: 12px;
+    font-weight: 100;
 }

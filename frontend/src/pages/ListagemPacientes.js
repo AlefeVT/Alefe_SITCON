@@ -9,42 +9,42 @@ import Footer from "../components/Footer";
 import Paginacao from "../components/Paginacao";
 
 function ListagemPacientes() {
-    const [dadosPacientes, setDadosPacientes] = useState([]);
-    const [pacientesFiltrados, setPacientesFiltrados] = useState([]);
-  
-    useEffect(() => {
-      // Faz a chamada à API do backend para obter os dados dos pacientes
-  
-      fetch("http://localhost:8800/pacientes") 
-        .then((response) => response.json())
-        .then((data) => {
-          setDadosPacientes(data);
-          setPacientesFiltrados(data); //exibe todos os pacientes
-        });
-    }, []);
-  
-    const handleSearch = (termoPesquisa) => {
-      const pacientesFiltrados = filtrarPacientes(termoPesquisa);
-      setPacientesFiltrados(pacientesFiltrados);
-    };
-  
-    const filtrarPacientes = (nome) => {
-      return dadosPacientes.filter(
-        (paciente) =>
-          paciente.nome.toLowerCase().includes(nome.toLowerCase()) ||
-          paciente.CPF.includes(nome)
-      );
-    };
-    return (
-    <>
-        <GlobalStyle />
-        <Header />
-        <Pesquisar placeholder="Pesquisar" onSearch={handleSearch} />
-        <Tabela pacientes={pacientesFiltrados} />
-        <Paginacao />
-        <Footer />
-    </>
+  const [dadosPacientes, setDadosPacientes] = useState([]);
+  const [pacientesFiltrados, setPacientesFiltrados] = useState([]);
+
+  useEffect(() => {
+    // Faz a chamada à API do backend para obter os dados dos pacientes
+
+    fetch("http://localhost:8800/pacientes")
+      .then((response) => response.json())
+      .then((data) => {
+        setDadosPacientes(data);
+        setPacientesFiltrados(data); //exibe todos os pacientes
+      });
+  }, []);
+
+  const handleSearch = (termoPesquisa) => {
+    const pacientesFiltrados = filtrarPacientes(termoPesquisa);
+    setPacientesFiltrados(pacientesFiltrados);
+  };
+
+  const filtrarPacientes = (nome) => {
+    return dadosPacientes.filter(
+      (paciente) =>
+        paciente.nome.toLowerCase().includes(nome.toLowerCase()) ||
+        paciente.CPF.includes(nome)
     );
+  };
+  return (
+    <>
+      <GlobalStyle />
+      <Header />
+      <Pesquisar placeholder="Pesquisar" onSearch={handleSearch} />
+      <Tabela pacientes={pacientesFiltrados} />
+      <Paginacao />
+      <Footer />
+    </>
+  );
 }
 
 export default ListagemPacientes;

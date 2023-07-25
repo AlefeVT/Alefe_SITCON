@@ -3,11 +3,12 @@ import TabelaListagem from '../components/TabelaListagem';
 import GlobalStyle from "../styles/global";
 import Header from "../components/Header";
 import Voltar from "../components/Voltar";
+import Footer from "../components/Footer";
 
 const ListagemSolicitacao = () => {
-  const[list, setList] = useState([])
+  const [list, setList] = useState([])
 
-  function handleSaveUser(user){
+  function handleSaveUser(user) {
     let newList = [...list]
     newList.push(user)
     setList(newList)
@@ -18,8 +19,8 @@ const ListagemSolicitacao = () => {
       <GlobalStyle />
       <Header />
       <Voltar />
-      {/* <TabelaListagem nome={''} cpf={''} tipoSolicitacao={''} procedimentos={''} formData={''} hora={''}/> */}
       <TabelaListagem onAddUser={handleSaveUser} list={list} />
+      <Footer />
     </>
   );
 };

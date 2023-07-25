@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/Formulario.css";
 import { useNavigate } from "react-router-dom";
+import "../styles/Formulario.css";
 
 const Formulario = ({ handleSubmit, projectData }) => {
     const [nome, setNome] = useState("");
@@ -17,6 +17,9 @@ const Formulario = ({ handleSubmit, projectData }) => {
     const [procedimentosOptions, setProcedimentosOptions] = useState([]);
     const [tipoSolicitacaoOptions, setTipoSolicitacaoOptions] = useState([]);
     const [profissionalOptions, setProfissionalOptions] = useState([]);
+
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showAtencaoMessage, setShowAtencaoMessage] = useState(false);
 
     useEffect(() => {
         fetch("http://localhost:8800/procedimentos")
@@ -49,8 +52,35 @@ const Formulario = ({ handleSubmit, projectData }) => {
 
     const navigate = useNavigate();
 
+    const isValidCpf = (value) => {
+        // Removendo a pontuação (caracteres não numéricos) do valor
+        const cleanedCpf = value.replace(/\D/g, '');
+
+        // Verificando se a string limpa contém apenas números e tem o formato correto
+        const cpfRegex = /^\d{11}$/; // Regex para validar CPF com 11 dígitos numéricos
+        return cpfRegex.test(cleanedCpf);
+    };
+
     const submitForm = (e) => {
-        e.preventDefault(); // Evita o comportamento padrão de envio do formulário
+        e.preventDefault();
+
+        // Verifica se algum dos campos obrigatórios está vazio ou se as opções dos dropdowns não foram selecionadas
+        if (
+            !nome ||
+            !dataNascimento ||
+            !cpf ||
+            !isValidCpf(cpf) || // Verifica se o CPF está no formato correto
+            !profissional ||
+            !tipoSolicitacao ||
+            !procedimentos ||
+            !formData ||
+            !hora
+        ) {
+            setShowAtencaoMessage(true);
+            return; // Não envia o formulário se algum campo obrigatório não estiver preenchido ou se alguma opção de dropdown não foi selecionada
+        }
+
+        // Se todos os campos obrigatórios estiverem preenchidos e as opções dos dropdowns selecionadas, continua com o envio do formulário
         const projectData = {
             nome,
             datanascimento: dataNascimento,
@@ -62,22 +92,44 @@ const Formulario = ({ handleSubmit, projectData }) => {
             hora,
         };
 
-        // Ou chame a função handleSubmit (se necessário)
-        // handleSubmit(projectData);
-
-        // Ou faça a requisição POST diretamente aqui usando Axios
         axios
             .post("http://localhost:8800/salvar", projectData)
             .then((response) => {
                 console.log(response.data);
-                // Faça algo com a resposta se necessário
-                // Por exemplo, redirecione para uma página de sucesso
-                // navigate("/sucesso");
+                setShowSuccessMessage(true);
+                setNome("");
+                setDataNascimento("");
+                setCpf("");
+                setProfissional("");
+                setTipoSolicitacao("");
+                setProcedimentos("");
+                setFormData("");
+                setHora("");
             })
             .catch((error) => {
                 console.error("Erro ao salvar os dados:", error);
             });
     };
+
+    useEffect(() => {
+        if (showSuccessMessage) {
+            const timer = setTimeout(() => {
+                setShowSuccessMessage(false);
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showSuccessMessage]);
+
+    useEffect(() => {
+        if (showAtencaoMessage) {
+            const timer = setTimeout(() => {
+                setShowAtencaoMessage(false);
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showAtencaoMessage]);
 
     return (
         <div>
@@ -108,7 +160,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </div>
 
                         <div className="formulario-campo1">
-                            <label htmlFor="cpf">CPF</label>
+                            <label htmlFor="cpf">CPF*</label>
                             <input
                                 className="campos"
                                 type="text"
@@ -119,7 +171,15 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </div>
                     </div>
                 </div>
-
+                {showSuccessMessage && (
+                    <div className="successMessage">Salvo com sucesso!</div>
+                )}
+                {showAtencaoMessage && (
+                    <div className="atencaoMessage">
+                        <strong>Atenção!</strong> Os Campos com * devem ser preenchidos
+                        obrigatoriamente.
+                    </div>
+                )}
                 {/* Seção 2 */}
                 <div className="formulario-profissional">
                     <div className="formulario-campo2">
@@ -129,11 +189,13 @@ const Formulario = ({ handleSubmit, projectData }) => {
                             id="profissional"
                             value={profissional}
                             onChange={(e) => setProfissional(e.target.value)}
-                            required
                         >
                             <option value="">Selecione um profissional</option>
                             {profissionalOptions.map((profissionalOption) => (
-                                <option key={profissionalOption.id} value={profissionalOption.nome}>
+                                <option
+                                    key={profissionalOption.id}
+                                    value={profissionalOption.nome}
+                                >
                                     {profissionalOption.nome}
                                 </option>
                             ))}
@@ -151,7 +213,6 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                 id="tipoSolicitacao"
                                 value={tipoSolicitacao}
                                 onChange={(e) => setTipoSolicitacao(e.target.value)}
-                                required
                             >
                                 <option value="">Selecione um tipo de solicitação</option>
                                 {tipoSolicitacaoOptions.map((option) => (
@@ -169,7 +230,6 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                 id="procedimentos"
                                 value={procedimentos}
                                 onChange={(e) => setProcedimentos(e.target.value)}
-                                required
                             >
                                 <option value="">Selecione um procedimento</option>
                                 {procedimentosOptions.map((procedimento) => (
@@ -188,9 +248,8 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                 className="campos"
                                 type="date"
                                 id="data"
-                                value={formData} // Renomeado para formData
-                                onChange={(e) => setFormData(e.target.value)} // Renomeado para formData
-                                required
+                                value={formData}
+                                onChange={(e) => setFormData(e.target.value)}
                             />
                         </div>
 
@@ -202,7 +261,6 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                 id="hora"
                                 value={hora}
                                 onChange={(e) => setHora(e.target.value)}
-                                required
                             />
                         </div>
                     </div>

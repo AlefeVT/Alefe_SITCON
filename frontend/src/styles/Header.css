@@ -1,5 +1,5 @@
 .header-container {
-  width: 100vw; 
+  width: 100vw;
   height: 15vh;
   background-color: #00629B;
   align-items: center;
@@ -9,7 +9,7 @@
 }
 
 .header-button {
-  width: 18vw; 
+  width: 18vw;
   height: 7vh;
   font-size: 18px;
   font-family: 'Proxima Nova', sans-serif;

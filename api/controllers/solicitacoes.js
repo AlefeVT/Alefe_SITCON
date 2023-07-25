@@ -1,4 +1,3 @@
-// controllers/solicitacoes.js
 import { db } from "../db.js";
 
 export const getSolicitacoes = (_, res) => {
