@@ -1,51 +1,94 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Formulario.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../styles/Formulario.css";
+import { useNavigate } from "react-router-dom";
 
-const Formulario = () => {
-    const [nome, setNome] = useState('');
-    const [dataNascimento, setDataNascimento] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [profissional, setProfissional] = useState('');
-    const [tipoSolicitacao, setTipoSolicitacao] = useState('');
-    const [procedimentos, setProcedimentos] = useState('');
-    const [data, setData] = useState('');
-    const [hora, setHora] = useState('');
+const Formulario = ({ handleSubmit, projectData }) => {
+    const [nome, setNome] = useState("");
+    const [dataNascimento, setDataNascimento] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [profissional, setProfissional] = useState("");
+    const [tipoSolicitacao, setTipoSolicitacao] = useState("");
+    const [procedimentos, setProcedimentos] = useState("");
+    const [formData, setFormData] = useState("");
+    const [hora, setHora] = useState("");
+    const [project, setProject] = useState(projectData || {});
+
+    const [procedimentosOptions, setProcedimentosOptions] = useState([]);
+    const [tipoSolicitacaoOptions, setTipoSolicitacaoOptions] = useState([]);
+    const [profissionalOptions, setProfissionalOptions] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8800/procedimentos")
+            .then((response) => response.json())
+            .then((data) => {
+                setProcedimentosOptions(data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar os procedimentos:", error);
+            });
+
+        fetch("http://localhost:8800/tiposolicitacao")
+            .then((response) => response.json())
+            .then((data) => {
+                setTipoSolicitacaoOptions(data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar os tipos de solicitação:", error);
+            });
+
+        fetch("http://localhost:8800/profissional")
+            .then((response) => response.json())
+            .then((data) => {
+                setProfissionalOptions(data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar os profissionais:", error);
+            });
+    }, []);
+
     const navigate = useNavigate();
 
-    const clickVoltar = () => {
-        navigate('/')
-    }
+    const submitForm = (e) => {
+        e.preventDefault(); // Evita o comportamento padrão de envio do formulário
+        const projectData = {
+            nome,
+            datanascimento: dataNascimento,
+            cpf,
+            profissional,
+            tipoSolicitacao,
+            procedimentos,
+            formData,
+            hora,
+        };
 
-    const procedimentosOptions = [
-        'Procedimento 1',
-        'Procedimento 2',
-        'Procedimento 3',
-        // Adicione outros procedimentos conforme necessário
-    ];
+        // Ou chame a função handleSubmit (se necessário)
+        // handleSubmit(projectData);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // AQUI VAI A VALIDAÇÃO PARA OS CAMPOS OBRIGATÓRIOS
-        if (!profissional || !tipoSolicitacao || !procedimentos || !data || !hora) {
-            alert('Atenção! Os Campos com * devem ser preenchidos obrigatoriamente.');
-            return;
-        }
-        // O restante do seu código para envio dos dados ou manipulação dos mesmos.
+        // Ou faça a requisição POST diretamente aqui usando Axios
+        axios
+            .post("http://localhost:8800/salvar", projectData)
+            .then((response) => {
+                console.log(response.data);
+                // Faça algo com a resposta se necessário
+                // Por exemplo, redirecione para uma página de sucesso
+                // navigate("/sucesso");
+            })
+            .catch((error) => {
+                console.error("Erro ao salvar os dados:", error);
+            });
     };
 
     return (
         <div>
-            <button type="button" className="buttonVoltar" onClick={clickVoltar}>
-                Voltar
-            </button>
-            <form className="formulario-container" onSubmit={handleSubmit}>
+            <form className="formulario-container" onSubmit={submitForm}>
+                {/* Seção 1 */}
                 <div className="formulario-section1">
                     <div className="formulario-campos-lado-a-lado">
                         <div className="formulario-campo1">
                             <label htmlFor="nome">Nome do Paciente</label>
                             <input
-                                className='campos'
+                                className="campos"
                                 type="text"
                                 id="nome"
                                 value={nome}
@@ -56,7 +99,7 @@ const Formulario = () => {
                         <div className="formulario-campo1">
                             <label htmlFor="dataNascimento">Data de Nascimento</label>
                             <input
-                                className='campos'
+                                className="campos"
                                 type="date"
                                 id="dataNascimento"
                                 value={dataNascimento}
@@ -67,7 +110,7 @@ const Formulario = () => {
                         <div className="formulario-campo1">
                             <label htmlFor="cpf">CPF</label>
                             <input
-                                className='campos'
+                                className="campos"
                                 type="text"
                                 id="cpf"
                                 value={cpf}
@@ -77,57 +120,61 @@ const Formulario = () => {
                     </div>
                 </div>
 
+                {/* Seção 2 */}
                 <div className="formulario-profissional">
                     <div className="formulario-campo2">
                         <label htmlFor="profissional">Profissional*</label>
                         <select
-                            className='campos'
+                            className="campos"
                             id="profissional"
                             value={profissional}
                             onChange={(e) => setProfissional(e.target.value)}
                             required
                         >
                             <option value="">Selecione um profissional</option>
-                            <option value="medico">Médico</option>
-                            <option value="enfermeiro">Enfermeiro</option>
-                            <option value="dentista">Dentista</option>
-                            {/* Adicione outras opções conforme necessário */}
+                            {profissionalOptions.map((profissionalOption) => (
+                                <option key={profissionalOption.id} value={profissionalOption.nome}>
+                                    {profissionalOption.nome}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </div>
 
+                {/* Seção 3 */}
                 <div className="formulario-section2">
                     <div className="formulario-campos-tip-pro">
                         <div className="formulario-campo2">
                             <label htmlFor="tipoSolicitacao">Tipo de Solicitação*</label>
                             <select
-                                className='campos'
+                                className="campos"
                                 id="tipoSolicitacao"
                                 value={tipoSolicitacao}
                                 onChange={(e) => setTipoSolicitacao(e.target.value)}
                                 required
                             >
                                 <option value="">Selecione um tipo de solicitação</option>
-                                <option value="exame">Exame</option>
-                                <option value="consulta">Consulta</option>
-                                <option value="cirurgia">Cirurgia</option>
-                                {/* Adicione outras opções conforme necessário */}
+                                {tipoSolicitacaoOptions.map((option) => (
+                                    <option key={option.id} value={option.descricao}>
+                                        {option.descricao}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
                         <div className="formulario-campo2">
                             <label htmlFor="procedimentos">Procedimentos*</label>
                             <select
-                                className='campos'
+                                className="campos"
                                 id="procedimentos"
                                 value={procedimentos}
                                 onChange={(e) => setProcedimentos(e.target.value)}
                                 required
                             >
                                 <option value="">Selecione um procedimento</option>
-                                {procedimentosOptions.map((procedimento, index) => (
-                                    <option key={index} value={procedimento}>
-                                        {procedimento}
+                                {procedimentosOptions.map((procedimento) => (
+                                    <option key={procedimento.id} value={procedimento.descricao}>
+                                        {procedimento.descricao}
                                     </option>
                                 ))}
                             </select>
@@ -138,11 +185,11 @@ const Formulario = () => {
                         <div className="formulario-campo2">
                             <label htmlFor="data">Data*</label>
                             <input
-                                className='campos'
+                                className="campos"
                                 type="date"
                                 id="data"
-                                value={data}
-                                onChange={(e) => setData(e.target.value)}
+                                value={formData} // Renomeado para formData
+                                onChange={(e) => setFormData(e.target.value)} // Renomeado para formData
                                 required
                             />
                         </div>
@@ -150,7 +197,7 @@ const Formulario = () => {
                         <div className="formulario-campo2">
                             <label htmlFor="hora">Hora*</label>
                             <input
-                                className='campos'
+                                className="campos"
                                 type="time"
                                 id="hora"
                                 value={hora}

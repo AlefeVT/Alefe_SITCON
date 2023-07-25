@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Pesquisar.css';
+import '../styles/Pesquisar.css';
 
 const Pesquisar = ({ placeholder, onSearch }) => {
   const [filtro, setFiltro] = useState('');

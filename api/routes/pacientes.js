@@ -3,6 +3,6 @@ import { getPacientes } from "../controllers/pacientes.js";
 
 const router = express.Router()
 
-router.get("/", getPacientes)
+router.get("/pacientes", getPacientes)
 
 export default router

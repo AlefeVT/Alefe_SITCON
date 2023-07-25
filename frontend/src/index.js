@@ -5,6 +5,7 @@ import App from './App';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SolicitacoesClinicas from './pages/SolicitacoesClinicas';
 import ListagemPacientes from './pages/ListagemPacientes';
+import ListagemSolicitacao from './pages/ListagemSolicitacao';
 
 const router = createBrowserRouter([
   {
@@ -12,8 +13,12 @@ const router = createBrowserRouter([
     element: <ListagemPacientes />
   },
   {
-    path: "solicitacoes",
+    path: "solicitacao",
     element: <SolicitacoesClinicas />
+  },
+  {
+    path: "listagem",
+    element: <ListagemSolicitacao />
   },
 
 ])

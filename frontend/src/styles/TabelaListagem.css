@@ -1,0 +1,31 @@
+/* Estilos para a tabela de listagem */
+.tabelalista {
+    width: 80vw;
+    margin-left: 8%;
+}
+
+.tabela-listagem {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .tabela-listagem th,
+  .tabela-listagem td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .tabela-listagem th {
+    background-color: #f2f2f2;
+  }
+  
+  .tabela-listagem tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .tabela-listagem tbody tr:hover {
+    background-color: #ddd;
+  }
+  

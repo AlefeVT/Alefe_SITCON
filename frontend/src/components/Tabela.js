@@ -1,5 +1,5 @@
 import React from 'react';
-import './Tabela.css';
+import '../styles/Tabela.css';
 
 const Tabela = ({ pacientes }) => {
   const formatarData = (dataISO) => {

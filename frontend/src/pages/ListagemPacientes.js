@@ -15,7 +15,7 @@ function ListagemPacientes() {
     useEffect(() => {
       // Faz a chamada à API do backend para obter os dados dos pacientes
   
-      fetch("http://localhost:8800") 
+      fetch("http://localhost:8800/pacientes") 
         .then((response) => response.json())
         .then((data) => {
           setDadosPacientes(data);

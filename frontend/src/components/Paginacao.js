@@ -1,5 +1,5 @@
 import React from "react";
-import "./Paginacao.css";
+import "../styles/Paginacao.css";
 
 const Paginacao = ({ currentPage, totalPages, onPageChange }) => {
 
