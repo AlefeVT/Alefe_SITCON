@@ -20,7 +20,6 @@ const Formulario = ({ handleSubmit, projectData }) => {
     const [profissionalOptions, setProfissionalOptions] = useState([]);
 
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const [showCpfErrorMessage, setShowCpfErrorMessage] = useState(false);
     const [showAtencaoMessage, setShowAtencaoMessage] = useState(false);
 
     useEffect(() => {
@@ -55,23 +54,19 @@ const Formulario = ({ handleSubmit, projectData }) => {
     const navigate = useNavigate();
 
     const isValidCpf = (value) => {
-        // Removendo a pontuação (caracteres não numéricos) do valor
         const cleanedCpf = value.replace(/\D/g, '');
-
-        // Verificando se a string limpa contém apenas números e tem o formato correto
-        const cpfRegex = /^\d{11}$/; // Regex para validar CPF com 11 dígitos numéricos
+        const cpfRegex = /^\d{11}$/;
         return cpfRegex.test(cleanedCpf);
     };
 
     const submitForm = (e) => {
         e.preventDefault();
 
-        // Verifica se algum dos campos obrigatórios está vazio ou se as opções dos dropdowns não foram selecionadas
         if (
             !nome ||
             !dataNascimento ||
             !cpf ||
-            !isValidCpf(cpf) || // Verifica se o CPF está no formato correto
+            !isValidCpf(cpf) ||
             !profissional ||
             !tipoSolicitacao ||
             !procedimentos.length ||
@@ -79,19 +74,18 @@ const Formulario = ({ handleSubmit, projectData }) => {
             !hora
         ) {
             setShowAtencaoMessage(true);
-            setShowCpfErrorMessage(!isValidCpf(cpf));
-            setShowSuccessMessage(false); // Não mostra a mensagem de sucesso se há campos não preenchidos
-            return; // Não envia o formulário se algum campo obrigatório não estiver preenchido ou se alguma opção de dropdown não foi selecionada
+            setShowSuccessMessage(false);
+            setTimeout(hideAtencaoMessage, 5000);
+            return;
         }
 
-        // Se todos os campos obrigatórios estiverem preenchidos e as opções dos dropdowns selecionadas, continua com o envio do formulário
         const projectData = {
             nome,
             datanascimento: dataNascimento,
             cpf,
             profissional,
             tipoSolicitacao,
-            procedimentos: procedimentos.join(','), // Convertendo o array de procedimentos em uma string separada por vírgulas
+            procedimentos: procedimentos.join(','),
             formData,
             hora,
         };
@@ -103,8 +97,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
             .then((response) => {
                 console.log(response.data);
                 setShowSuccessMessage(true);
-                setShowAtencaoMessage(false); // Esconde a mensagem de atenção se o envio for bem-sucedido
-                setShowCpfErrorMessage(false); // Esconde a mensagem de CPF inválido se o envio for bem-sucedido
+                setShowAtencaoMessage(false);
                 setNome("");
                 setDataNascimento("");
                 setCpf("");
@@ -117,29 +110,27 @@ const Formulario = ({ handleSubmit, projectData }) => {
             .catch((error) => {
                 console.error("Erro ao salvar os dados:", error);
                 setShowSuccessMessage(false);
-                setShowAtencaoMessage(false); // Esconde a mensagem de atenção em caso de erro para evitar confusão
-                setShowCpfErrorMessage(false); // Esconde a mensagem de CPF inválido em caso de erro para evitar confusão
+                setShowAtencaoMessage(false);
             });
     };
 
-    // Filtrar as opções de procedimentos com base no valor de tipoSolicitacao
     const procedimentosFiltrados = procedimentosOptions.filter((procedimento) => {
-        // Se tipoSolicitacao é "Exames Laboratoriais", exclua as opções com id igual a 1 e 2
         if (tipoSolicitacao === "Exames Laboratoriais") {
             return procedimento.id !== 1 && procedimento.id !== 2;
         }
-        // Se tipoSolicitacao é "Consulta", exclua as opções com id igual a 3, 4, 5 e 6
         if (tipoSolicitacao === "Consulta") {
             return procedimento.id !== 3 && procedimento.id !== 4 && procedimento.id !== 5 && procedimento.id !== 6;
         }
-        // Caso contrário, mantenha todas as opções de procedimentos
         return true;
     });
+
+    const hideAtencaoMessage = () => {
+        setShowAtencaoMessage(false);
+    };
 
     return (
         <div>
             <form className="formulario-container" onSubmit={submitForm}>
-                {/* Seção 1 */}
                 <div className="formulario-section1">
                     <div className="formulario-campos-lado-a-lado">
                         <div className="formulario-campo1">
@@ -176,18 +167,14 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </div>
                     </div>
                 </div>
-                {showSuccessMessage && (
-                    <div className="successMessage">Salvo com sucesso!</div>
-                )}
-                {showCpfErrorMessage && (
-                    <div className="errorMessage">CPF inválido! O CPF deve conter 11 dígitos numéricos.</div>
-                )}
+
+                {showSuccessMessage && <div className="successMessage">Salvo com sucesso!</div>}
                 {showAtencaoMessage && (
                     <div className="atencaoMessage">
                         <strong>Atenção!</strong> Os Campos com * devem ser preenchidos obrigatoriamente.
                     </div>
                 )}
-                {/* Seção 2 */}
+
                 <div className="formulario-profissional">
                     <div className="formulario-campo2">
                         <label htmlFor="profissional">Profissional*</label>
@@ -209,7 +196,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </select>
                     </div>
                 </div>
-                {/* Seção 3 */}
+
                 <div className="formulario-section2">
                     <div className="formulario-campos-tip-pro">
                         <div className="formulario-campo3">
@@ -231,7 +218,6 @@ const Formulario = ({ handleSubmit, projectData }) => {
 
                         <div className="formulario-campo4">
                             <label htmlFor="procedimentos">Procedimentos*</label>
-
                             <Select
                                 id="procedimentos"
                                 className="select-com"
@@ -240,12 +226,10 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                     label: procedimento,
                                 }))}
                                 onChange={(selectedOptions) => {
-                                    // Verifique se é um array (quando é selecionado mais de um item)
                                     if (Array.isArray(selectedOptions)) {
                                         const selectedValues = selectedOptions.map((option) => option.value);
                                         setProcedimentos(selectedValues);
                                     } else {
-                                        // Se não for um array, é um único item selecionado
                                         setProcedimentos([selectedOptions.value]);
                                     }
                                 }}
