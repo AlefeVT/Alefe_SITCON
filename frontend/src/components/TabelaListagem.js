@@ -28,11 +28,11 @@ const TabelaListagem = () => {
     };
 
     return (
-        <div className='table-container'>
+        <div className='table-listagem'>
             <table>
                 <thead>
                     <tr>
-                        <th>Nome Paciente</th>
+                        <th>Nome do Paciente</th>
                         <th>CPF</th>
                         <th>Tipo de Solicitação</th>
                         <th>Procedimentos</th>
@@ -45,7 +45,7 @@ const TabelaListagem = () => {
                         <tr key={index}>
                             <td>{user.nome}</td>
                             <td>{user.cpf}</td>
-                            <td>{user.tipoSolicitacao}</td>
+                            <td>{user.tipo_solicitacao}</td>
                             <td>
                                 {Array.isArray(user.procedimentos)
                                     ? user.procedimentos.join(', ')

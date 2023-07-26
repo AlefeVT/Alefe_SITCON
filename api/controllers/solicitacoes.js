@@ -23,7 +23,7 @@ export const salvarSolicitacao = (req, res) => {
     } = req.body;
 
     const q =
-        "INSERT INTO solicitacoes (nome, dataNascimento, cpf, profissional, tipoSolicitacao, procedimentos, data, hora) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO solicitacoes (nome, data_nascimento, cpf, profissional, tipo_solicitacao, procedimentos, data, hora) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
         nome,
         datanascimento,
@@ -38,7 +38,9 @@ export const salvarSolicitacao = (req, res) => {
     db.query(q, values, (err, result) => {
         if (err) {
             console.error("Erro ao salvar os dados no banco de dados:", err);
-            return res.status(500).json({ error: "Erro ao salvar os dados no banco de dados" });
+            return res
+                .status(500)
+                .json({ error: "Erro ao salvar os dados no banco de dados" });
         }
 
         return res.status(201).json({ message: "Dados salvos com sucesso" });

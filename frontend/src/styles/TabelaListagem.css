@@ -1,10 +1,11 @@
-.table-container {
+.table-listagem {
     width: 80vw;
+    margin-left: 8%;
+    margin-bottom: 40vh;
     padding: 0px;
     display: flex;
     flex-direction: center;
     overflow-x: auto;
     border-radius: 12px;
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.22);
-    margin-bottom: 40vh;
 }

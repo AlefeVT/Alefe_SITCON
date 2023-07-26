@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import "../styles/Formulario.css";
 
@@ -9,7 +10,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
     const [cpf, setCpf] = useState("");
     const [profissional, setProfissional] = useState("");
     const [tipoSolicitacao, setTipoSolicitacao] = useState("");
-    const [procedimentos, setProcedimentos] = useState("");
+    const [procedimentos, setProcedimentos] = useState([]);
     const [formData, setFormData] = useState("");
     const [hora, setHora] = useState("");
     const [project, setProject] = useState(projectData || {});
@@ -19,6 +20,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
     const [profissionalOptions, setProfissionalOptions] = useState([]);
 
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showCpfErrorMessage, setShowCpfErrorMessage] = useState(false);
     const [showAtencaoMessage, setShowAtencaoMessage] = useState(false);
 
     useEffect(() => {
@@ -72,11 +74,13 @@ const Formulario = ({ handleSubmit, projectData }) => {
             !isValidCpf(cpf) || // Verifica se o CPF está no formato correto
             !profissional ||
             !tipoSolicitacao ||
-            !procedimentos ||
+            !procedimentos.length ||
             !formData ||
             !hora
         ) {
             setShowAtencaoMessage(true);
+            setShowCpfErrorMessage(!isValidCpf(cpf));
+            setShowSuccessMessage(false); // Não mostra a mensagem de sucesso se há campos não preenchidos
             return; // Não envia o formulário se algum campo obrigatório não estiver preenchido ou se alguma opção de dropdown não foi selecionada
         }
 
@@ -87,49 +91,50 @@ const Formulario = ({ handleSubmit, projectData }) => {
             cpf,
             profissional,
             tipoSolicitacao,
-            procedimentos,
+            procedimentos: procedimentos.join(','), // Convertendo o array de procedimentos em uma string separada por vírgulas
             formData,
             hora,
         };
+
+        console.log("Dados a serem enviados ao servidor:", projectData);
 
         axios
             .post("http://localhost:8800/salvar", projectData)
             .then((response) => {
                 console.log(response.data);
                 setShowSuccessMessage(true);
+                setShowAtencaoMessage(false); // Esconde a mensagem de atenção se o envio for bem-sucedido
+                setShowCpfErrorMessage(false); // Esconde a mensagem de CPF inválido se o envio for bem-sucedido
                 setNome("");
                 setDataNascimento("");
                 setCpf("");
                 setProfissional("");
                 setTipoSolicitacao("");
-                setProcedimentos("");
+                setProcedimentos([]);
                 setFormData("");
                 setHora("");
             })
             .catch((error) => {
                 console.error("Erro ao salvar os dados:", error);
+                setShowSuccessMessage(false);
+                setShowAtencaoMessage(false); // Esconde a mensagem de atenção em caso de erro para evitar confusão
+                setShowCpfErrorMessage(false); // Esconde a mensagem de CPF inválido em caso de erro para evitar confusão
             });
     };
 
-    useEffect(() => {
-        if (showSuccessMessage) {
-            const timer = setTimeout(() => {
-                setShowSuccessMessage(false);
-            }, 3000);
-
-            return () => clearTimeout(timer);
+    // Filtrar as opções de procedimentos com base no valor de tipoSolicitacao
+    const procedimentosFiltrados = procedimentosOptions.filter((procedimento) => {
+        // Se tipoSolicitacao é "Exames Laboratoriais", exclua as opções com id igual a 1 e 2
+        if (tipoSolicitacao === "Exames Laboratoriais") {
+            return procedimento.id !== 1 && procedimento.id !== 2;
         }
-    }, [showSuccessMessage]);
-
-    useEffect(() => {
-        if (showAtencaoMessage) {
-            const timer = setTimeout(() => {
-                setShowAtencaoMessage(false);
-            }, 3000);
-
-            return () => clearTimeout(timer);
+        // Se tipoSolicitacao é "Consulta", exclua as opções com id igual a 3, 4, 5 e 6
+        if (tipoSolicitacao === "Consulta") {
+            return procedimento.id !== 3 && procedimento.id !== 4 && procedimento.id !== 5 && procedimento.id !== 6;
         }
-    }, [showAtencaoMessage]);
+        // Caso contrário, mantenha todas as opções de procedimentos
+        return true;
+    });
 
     return (
         <div>
@@ -160,7 +165,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </div>
 
                         <div className="formulario-campo1">
-                            <label htmlFor="cpf">CPF*</label>
+                            <label htmlFor="cpf">CPF</label>
                             <input
                                 className="campos"
                                 type="text"
@@ -174,10 +179,12 @@ const Formulario = ({ handleSubmit, projectData }) => {
                 {showSuccessMessage && (
                     <div className="successMessage">Salvo com sucesso!</div>
                 )}
+                {showCpfErrorMessage && (
+                    <div className="errorMessage">CPF inválido! O CPF deve conter 11 dígitos numéricos.</div>
+                )}
                 {showAtencaoMessage && (
                     <div className="atencaoMessage">
-                        <strong>Atenção!</strong> Os Campos com * devem ser preenchidos
-                        obrigatoriamente.
+                        <strong>Atenção!</strong> Os Campos com * devem ser preenchidos obrigatoriamente.
                     </div>
                 )}
                 {/* Seção 2 */}
@@ -190,7 +197,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
                             value={profissional}
                             onChange={(e) => setProfissional(e.target.value)}
                         >
-                            <option value="">Selecione um profissional</option>
+                            <option value=""></option>
                             {profissionalOptions.map((profissionalOption) => (
                                 <option
                                     key={profissionalOption.id}
@@ -202,11 +209,10 @@ const Formulario = ({ handleSubmit, projectData }) => {
                         </select>
                     </div>
                 </div>
-
                 {/* Seção 3 */}
                 <div className="formulario-section2">
                     <div className="formulario-campos-tip-pro">
-                        <div className="formulario-campo2">
+                        <div className="formulario-campo3">
                             <label htmlFor="tipoSolicitacao">Tipo de Solicitação*</label>
                             <select
                                 className="campos"
@@ -214,7 +220,7 @@ const Formulario = ({ handleSubmit, projectData }) => {
                                 value={tipoSolicitacao}
                                 onChange={(e) => setTipoSolicitacao(e.target.value)}
                             >
-                                <option value="">Selecione um tipo de solicitação</option>
+                                <option value=""></option>
                                 {tipoSolicitacaoOptions.map((option) => (
                                     <option key={option.id} value={option.descricao}>
                                         {option.descricao}
@@ -223,21 +229,33 @@ const Formulario = ({ handleSubmit, projectData }) => {
                             </select>
                         </div>
 
-                        <div className="formulario-campo2">
+                        <div className="formulario-campo4">
                             <label htmlFor="procedimentos">Procedimentos*</label>
-                            <select
-                                className="campos"
+
+                            <Select
                                 id="procedimentos"
-                                value={procedimentos}
-                                onChange={(e) => setProcedimentos(e.target.value)}
-                            >
-                                <option value="">Selecione um procedimento</option>
-                                {procedimentosOptions.map((procedimento) => (
-                                    <option key={procedimento.id} value={procedimento.descricao}>
-                                        {procedimento.descricao}
-                                    </option>
-                                ))}
-                            </select>
+                                className="select-com"
+                                value={procedimentos.map((procedimento) => ({
+                                    value: procedimento,
+                                    label: procedimento,
+                                }))}
+                                onChange={(selectedOptions) => {
+                                    // Verifique se é um array (quando é selecionado mais de um item)
+                                    if (Array.isArray(selectedOptions)) {
+                                        const selectedValues = selectedOptions.map((option) => option.value);
+                                        setProcedimentos(selectedValues);
+                                    } else {
+                                        // Se não for um array, é um único item selecionado
+                                        setProcedimentos([selectedOptions.value]);
+                                    }
+                                }}
+                                options={procedimentosFiltrados.map((procedimento) => ({
+                                    value: procedimento.descricao,
+                                    label: procedimento.descricao,
+                                }))}
+                                isMulti={tipoSolicitacao === "Exames Laboratoriais"}
+                                placeholder=""
+                            />
                         </div>
                     </div>
 
